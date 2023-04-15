@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { LoanDocument } from "./loan-document.entity";
 
-const url = "http://localhost:3000/loanRequests";
+const url = "http://localhost:5000/add";
 
 const initialState = {
   loading: false,
@@ -14,7 +15,7 @@ export type loanRequestState = Readonly<typeof initialState>;
 
 export const requestLoan = createAsyncThunk(
   "loanRequest/getloanResponse",
-  async (loanRequest: { amount: number; duration: number }) => {
+  async (loanRequest:LoanDocument) => {
     return axios.post<any>(url, loanRequest);
   }
 );
@@ -37,6 +38,7 @@ export const LoanRequestSlice = createSlice({
       state.error = false;
       state.empty = false;
       state.loanStatus = action.payload.data;
+      console.log(action.payload.data)
     });
     builder.addCase(requestLoan.rejected, (state) => {
       state.loading = false;

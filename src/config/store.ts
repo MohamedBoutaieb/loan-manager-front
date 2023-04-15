@@ -5,7 +5,12 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 const store = configureStore({
   reducer: { loanRequest },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these field paths in all actions
+        ignoredActionPaths: ['payload.config', 'payload.request','payload.headers', 'error', 'meta.arg'],
+      },
+    }).concat(
       loadingBarMiddleware({
         promiseTypeSuffixes: ["/pending", "/fulfilled", "/rejected"],
       })

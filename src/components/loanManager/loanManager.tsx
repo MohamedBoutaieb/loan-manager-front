@@ -1,6 +1,11 @@
 import React from "react";
 import { Button, Form, Input, InputNumber, DatePicker } from "antd";
-import './loanManager.scss'
+import "./loanManager.scss";
+import dayjs from "dayjs";
+import { useAppDispatch } from "../../config/store";
+import { requestLoan } from "../../config/reducers/loanRequest.reducer";
+import { useHistory  } from "react-router-dom";
+
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
@@ -19,11 +24,24 @@ const validateMessages = {
 };
 /* eslint-enable no-template-curly-in-string */
 
-const onFinish = (values: any) => {
-  console.log(values);
-};
-
 export const LoanManager = () => {
+  const dispatch = useAppDispatch();
+  const history = useHistory();
+  const onFinish = (values: any) => {
+  
+    const obj = {
+      ...values["user"],
+    };
+    const now = dayjs();
+    obj["startDate"] = Date.parse(
+      obj["startDate"].format("YYYY-MM-DD HH:mm:ss")
+    );
+    obj["creationDate"] = Date.parse(now.format("YYYY-MM-DD HH:mm:ss"));
+    obj["endDate"] = Date.parse(obj["endDate"].format("YYYY-MM-DD HH:mm:ss"));
+
+    dispatch(requestLoan(obj));
+    history.push('/loanResult');
+  };
   return (
     <Form
       {...layout}
@@ -63,10 +81,7 @@ export const LoanManager = () => {
       </Form.Item>
 
       <Form.Item name={["user", "currency"]} label="currency">
-        <InputNumber />
-      </Form.Item>
-      <Form.Item name={["user", "creationDate"]} label="creationDate">
-        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+        <Input />
       </Form.Item>
       <Form.Item name={["user", "startDate"]} label="startDate">
         <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
@@ -81,9 +96,6 @@ export const LoanManager = () => {
         rules={[{ type: "number", min: 1 }]}
       >
         <InputNumber />
-      </Form.Item>
-      <Form.Item name={["user", "State"]} label="state">
-        <Input />
       </Form.Item>
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit">

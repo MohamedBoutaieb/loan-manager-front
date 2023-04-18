@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { requestLoan } from "../../config/reducers/loanRequest.reducer";
 import { useAppDispatch, useAppSelector } from "../../config/store";
 import dayjs from "dayjs";
+import LoanUpdates from "./checkLoanCard";
 const LoanResult = () => {
   const requestData = {
     firstName: "John",
@@ -27,7 +28,7 @@ const LoanResult = () => {
 
   return (
     <div>
-      <h1>Loan Request Details</h1>
+      <h1><LoanUpdates data = {loanRequest.loanStatus}/></h1>
       <p></p>
     </div>
   );
